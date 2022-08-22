@@ -40,10 +40,11 @@ namespace MiPrimerApi.Controllers
                 IdUsuario=producto.IdUsuario,
             });
         }
+
         [HttpDelete]
-        public bool EliminarProducto([FromBody] int id)
+        public bool  EliminarProducto([FromBody] int id)
         {
-            return false;
+            return ProductoHandler.DeleteProduct(id);
         }
     }
 }

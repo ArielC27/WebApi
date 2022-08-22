@@ -117,23 +117,33 @@ namespace MiPrimerApi.Repository
             bool result = false;
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
-                string queryDelete = "DELETE FROM Producto WHERE Id = @id";
-                SqlParameter sqlParameter = new SqlParameter("id", System.Data.SqlDbType.BigInt);
-                sqlParameter.Value = id;
-
+                List<string> Querys = new List<string>();
+                //--
+                string queryDelete = "DELETE ProductoVendido FROM Producto AS P INNER JOIN ProductoVendido AS PV on P.ID = PV.IDPRODUCTO WHERE P.ID = @id";
+                Querys.Add(queryDelete);
+                //---
+                string queryDelete2 = "DELETE FROM Producto WHERE Id = @id";
+                Querys.Add(queryDelete2);
+                //--
                 sqlConnection.Open();
-                using (SqlCommand sqlCommand = new SqlCommand(queryDelete, sqlConnection))
+                foreach (var Query in Querys)
                 {
-                    sqlCommand.Parameters.Add(sqlParameter);
-                    int numberOfRows = sqlCommand.ExecuteNonQuery();
-                    if (numberOfRows > 0)
+                    SqlParameter sqlParameter = new SqlParameter("id", System.Data.SqlDbType.BigInt);
+                    sqlParameter.Value = id;
+                    using (SqlCommand sqlCommand = new SqlCommand(Query, sqlConnection))
                     {
-                        result = true;
+                        sqlCommand.Parameters.Add(sqlParameter);
+                        int numberOfRows = sqlCommand.ExecuteNonQuery();
+                        if (numberOfRows > 0)
+                        {
+                            result = true;
+                        }
                     }
                 }
                 sqlConnection.Close();
             }
             return result;
+
         }
     }
 }

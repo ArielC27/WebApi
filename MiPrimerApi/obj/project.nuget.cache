@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "MwEmxfBhVLvXsjaJk1iQJkgoyujmbRL9I5cpejWB2yI+zlcuGluaS4jsEVvfYGcPK4IsRk7y0r+zWPFCYfAh1w==",
+  "dgSpecHash": "+MOQGyBkCcFp4ZbQt/Jc/OjwGnSnuQ1AJprZN3/jWymjpBmNrEQtsBE1UxmVzVYwiLr1YNb/XqbC5arNUMSdlg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\marce\\Desktop\\Visual\\MiPrimerApi\\MiPrimerApi\\MiPrimerApi.csproj",
+  "projectFilePath": "C:\\Users\\marce\\Desktop\\Visual\\MiPrimerApi\\WebApi\\MiPrimerApi\\MiPrimerApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\marce\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\marce\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",

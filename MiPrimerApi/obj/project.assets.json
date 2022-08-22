@@ -689,11 +689,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\marce\\Desktop\\Visual\\MiPrimerApi\\MiPrimerApi\\MiPrimerApi.csproj",
+      "projectUniqueName": "C:\\Users\\marce\\Desktop\\Visual\\MiPrimerApi\\WebApi\\MiPrimerApi\\MiPrimerApi.csproj",
       "projectName": "MiPrimerApi",
-      "projectPath": "C:\\Users\\marce\\Desktop\\Visual\\MiPrimerApi\\MiPrimerApi\\MiPrimerApi.csproj",
+      "projectPath": "C:\\Users\\marce\\Desktop\\Visual\\MiPrimerApi\\WebApi\\MiPrimerApi\\MiPrimerApi.csproj",
       "packagesPath": "C:\\Users\\marce\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\marce\\Desktop\\Visual\\MiPrimerApi\\MiPrimerApi\\obj\\",
+      "outputPath": "C:\\Users\\marce\\Desktop\\Visual\\MiPrimerApi\\WebApi\\MiPrimerApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
