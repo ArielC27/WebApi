@@ -25,7 +25,7 @@ namespace MiPrimerApi.Repository
                                 Usuario usuario = new Usuario();
                                 usuario.Nombre = dataReader["Nombre"].ToString();
                                 usuario.Apellido = dataReader["Apellido"].ToString();
-                                usuario.NombreUsuario = dataReader["Costo"].ToString();
+                                usuario.NombreUsuario = dataReader["NombreUsuario"].ToString();
                                 usuario.Contraseña = dataReader["Contraseña"].ToString();
                                 usuario.Mail = dataReader["Mail"].ToString();
 

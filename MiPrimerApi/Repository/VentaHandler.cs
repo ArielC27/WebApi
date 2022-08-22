@@ -35,5 +35,29 @@ namespace MiPrimerApi.Repository
             }
             return ventas;
         }
+        public static bool CreateNewSale(Venta venta)
+        {
+            bool result = false;
+            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            {
+                string queryInsert = "INSERT INTO Venta (Comentarios) " +
+                    "VALUES (@comentarios)";
+                SqlParameter comentarios = new SqlParameter("Comentarios", System.Data.SqlDbType.VarChar) { Value = venta.Comentarios };
+                
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
+                {
+                    sqlCommand.Parameters.Add(comentarios);
+                    
+                    int numberOfRows = sqlCommand.ExecuteNonQuery();
+                    if (numberOfRows > 0)
+                    {
+                        result = true;
+                    }
+                }
+                sqlConnection.Close();
+            }
+            return result;
+        }
     }
 }

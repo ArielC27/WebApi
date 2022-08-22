@@ -10,11 +10,9 @@ namespace MiPrimerApi.Repository
         public static List<Producto> GetProductos()
         {
             List<Producto> productos = new List<Producto>();
-
-            // el ConnectionString se encuientra en DBHandler
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
-                var query = "SELECT * FROM Producto WHERE IdUsuario = @IdUsuario";
+                var query = "SELECT * FROM Producto";
                 using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                 {
                     sqlConnection.Open();

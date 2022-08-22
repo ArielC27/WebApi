@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MiPrimerApi.Controllers.DTOS;
 using MiPrimerApi.Model;
 using MiPrimerApi.Repository;
 
@@ -29,7 +30,7 @@ namespace MiPrimerApi.Controllers
         }
 
         [HttpPost]
-        public bool CrearProducto([FromBody] Producto producto)
+        public bool CrearProducto([FromBody] PostProducto producto)
         {
             return ProductoHandler.CreateProduct(new Producto
             {
