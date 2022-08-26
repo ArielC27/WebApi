@@ -6,7 +6,7 @@ namespace MiPrimerApi.Repository
     public static class ProductoVendidoHandler
     {
         public const string ConnectionString = "Server=DESKTOP-NU2KG89;Database=SistemaGestion;Trusted_Connection=True";
-        public static List<ProductoVendido> GetProductoVendido()
+        public static List<ProductoVendido> GetProductsSales()
         {
             List<ProductoVendido> productosVendidos = new List<ProductoVendido>();
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))

@@ -7,38 +7,38 @@ namespace MiPrimerApi.Repository
     public static class ProductoHandler
     {
         public const string ConnectionString = "Server=DESKTOP-NU2KG89;Database=SistemaGestion;Trusted_Connection=True";
-        public static List<Producto> GetProductos()
+        public static bool CreateProduct(Producto producto)
         {
-            List<Producto> productos = new List<Producto>();
+            bool result = false;
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
-                var query = "SELECT * FROM Producto";
-                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
-                {
-                    sqlConnection.Open();
-              
-                    using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
-                    {
-                        if (dataReader.HasRows)
-                        {
-                            while (dataReader.Read())
-                            {
-                                Producto producto = new Producto();
-                                producto.Id = Convert.ToInt32(dataReader["ID"]);
-                                producto.Descripciones = dataReader["Descripciones"].ToString();
-                                producto.Costo = Convert.ToDouble(dataReader["Costo"]);
-                                producto.PrecioVenta = Convert.ToDouble(dataReader["PrecioVenta"]);
-                                producto.Stock = Convert.ToInt32(dataReader["Stock"]);
-                                producto.IdUsuario = Convert.ToInt32(dataReader["IdUsuario"]);
+                string queryInsert = "INSERT INTO Producto (Descripciones, Costo, PrecioVenta, Stock, IdUsuario) " +
+                    "VALUES (@descripciones, @costo, @precioVenta, @stock, @idUsuario)";
 
-                                productos.Add(producto);
-                            }
-                        }
+                SqlParameter descripciones = new SqlParameter("Descripciones", System.Data.SqlDbType.VarChar) { Value = producto.Descripciones };
+                SqlParameter costo = new SqlParameter("Costo", System.Data.SqlDbType.Decimal) { Value = producto.Costo };
+                SqlParameter precioVenta = new SqlParameter("PrecioVenta", System.Data.SqlDbType.Decimal) { Value = producto.PrecioVenta };
+                SqlParameter stock = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = producto.Stock };
+                SqlParameter idUsuario = new SqlParameter("IdUsuario", System.Data.SqlDbType.Int) { Value = producto.IdUsuario };
+
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
+                {
+                    sqlCommand.Parameters.Add(descripciones);
+                    sqlCommand.Parameters.Add(costo);
+                    sqlCommand.Parameters.Add(precioVenta);
+                    sqlCommand.Parameters.Add(stock);
+                    sqlCommand.Parameters.Add(idUsuario);
+
+                    int numberOfRows = sqlCommand.ExecuteNonQuery();
+                    if (numberOfRows > 0)
+                    {
+                        result = true;
                     }
-                    sqlConnection.Close();
                 }
+                sqlConnection.Close();
             }
-            return productos;
+            return result;
         }
         public static bool UpdateProduct(Producto producto)
         {
@@ -68,39 +68,6 @@ namespace MiPrimerApi.Repository
 
                     int numberOfRows = sqlCommand.ExecuteNonQuery();
 
-                    if (numberOfRows > 0)
-                    {
-                        result = true;
-                    }
-                }
-                sqlConnection.Close();
-            }
-            return result;
-        }
-        public static bool CreateProduct(Producto producto)
-        {
-            bool result = false;
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
-            {
-                string queryInsert = "INSERT INTO Producto (Descripciones, Costo, PrecioVenta, Stock, IdUsuario) " +
-                    "VALUES (@descripciones, @costo, @precioVenta, @stock, @idUsuario)";
-
-                SqlParameter descripciones = new SqlParameter("Descripciones", System.Data.SqlDbType.VarChar) { Value = producto.Descripciones };
-                SqlParameter costo = new SqlParameter("Costo", System.Data.SqlDbType.Decimal) { Value = producto.Costo };
-                SqlParameter precioVenta = new SqlParameter("PrecioVenta", System.Data.SqlDbType.Decimal) { Value = producto.PrecioVenta };
-                SqlParameter stock = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = producto.Stock };
-                SqlParameter idUsuario = new SqlParameter("IdUsuario", System.Data.SqlDbType.Int) { Value = producto.IdUsuario };
-
-                sqlConnection.Open();
-                using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
-                {
-                    sqlCommand.Parameters.Add(descripciones);
-                    sqlCommand.Parameters.Add(costo);
-                    sqlCommand.Parameters.Add(precioVenta);
-                    sqlCommand.Parameters.Add(stock);
-                    sqlCommand.Parameters.Add(idUsuario);
-
-                    int numberOfRows = sqlCommand.ExecuteNonQuery();
                     if (numberOfRows > 0)
                     {
                         result = true;
@@ -142,6 +109,39 @@ namespace MiPrimerApi.Repository
             }
             return result;
 
+        }
+        public static List<Producto> GetProducts()
+        {
+            List<Producto> productos = new List<Producto>();
+            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            {
+                var query = "SELECT * FROM Producto";
+                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlConnection.Open();
+              
+                    using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+                    {
+                        if (dataReader.HasRows)
+                        {
+                            while (dataReader.Read())
+                            {
+                                Producto producto = new Producto();
+                                producto.Id = Convert.ToInt32(dataReader["ID"]);
+                                producto.Descripciones = dataReader["Descripciones"].ToString();
+                                producto.Costo = Convert.ToDouble(dataReader["Costo"]);
+                                producto.PrecioVenta = Convert.ToDouble(dataReader["PrecioVenta"]);
+                                producto.Stock = Convert.ToInt32(dataReader["Stock"]);
+                                producto.IdUsuario = Convert.ToInt32(dataReader["IdUsuario"]);
+
+                                productos.Add(producto);
+                            }
+                        }
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            return productos;
         }
     }
 }

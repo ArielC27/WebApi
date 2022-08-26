@@ -6,16 +6,16 @@ using MiPrimerApi.Repository;
 namespace MiPrimerApi.Controllers
 {
     [ApiController]
-    [Route ("[controller]")]
+    [Route("[controller]")]
     public class ProductoController : ControllerBase
     {
-        [HttpGet (Name= "GetProductos")]
+        [HttpGet(Name = "GetProducts")]
         public List<Producto> GetProductos()
         {
-            return ProductoHandler.GetProductos();
+            return ProductoHandler.GetProducts();
         }
 
-        [HttpPut]
+        [HttpPut(Name = "UpdateProduct")]
         public bool ModificarProducto([FromBody] Producto producto)
         {
             return ProductoHandler.UpdateProduct(new Producto
@@ -29,21 +29,21 @@ namespace MiPrimerApi.Controllers
             });
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateProduct")]
         public bool CrearProducto([FromBody] PostProducto producto)
         {
             return ProductoHandler.CreateProduct(new Producto
             {
-                Descripciones=producto.Descripciones,
-                Costo=producto.Costo,
-                PrecioVenta=producto.PrecioVenta,
-                Stock=producto.Stock,
-                IdUsuario=producto.IdUsuario,
+                Descripciones = producto.Descripciones,
+                Costo = producto.Costo,
+                PrecioVenta = producto.PrecioVenta,
+                Stock = producto.Stock,
+                IdUsuario = producto.IdUsuario,
             });
         }
 
-        [HttpDelete]
-        public bool  EliminarProducto([FromBody] int id)
+        [HttpDelete(Name = "DeleteProducts")]
+        public bool EliminarProducto([FromBody] int id)
         {
             return ProductoHandler.DeleteProduct(id);
         }

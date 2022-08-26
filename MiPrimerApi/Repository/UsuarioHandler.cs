@@ -1,4 +1,5 @@
 ﻿using MiPrimerApi.Model;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace MiPrimerApi.Repository
@@ -6,60 +7,38 @@ namespace MiPrimerApi.Repository
     public static class UsuarioHandler
     {
         public const string ConnectionString = "Server=DESKTOP-NU2KG89;Database=SistemaGestion;Trusted_Connection=True";
-        public static List<Usuario> GetUsuarios()
+        public static Usuario GetUser(string nombreUsuario)
         {
-            List<Usuario> usuarios = new List<Usuario>();
+            Usuario usuario = new Usuario();
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
-                var queryUsuario = "SELECT * FROM Usuario";
+                var queryUsuario = "SELECT * FROM Usuario WHERE NombreUsuario = @nombreUsuario ";
                 using (SqlCommand sqlCommand = new SqlCommand(queryUsuario, sqlConnection))
                 {
                     sqlConnection.Open();
 
+                    
+                    sqlCommand.Parameters.Add(new SqlParameter("NombreUsuario", SqlDbType.VarChar) { Value = nombreUsuario });
                     using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
                     {
                         if (dataReader.HasRows)
                         {
                             while (dataReader.Read())
                             {
-                                Usuario usuario = new Usuario();
+                                usuario.Id = Convert.ToInt32(dataReader["Id"]);
                                 usuario.Nombre = dataReader["Nombre"].ToString();
                                 usuario.Apellido = dataReader["Apellido"].ToString();
                                 usuario.NombreUsuario = dataReader["NombreUsuario"].ToString();
                                 usuario.Contraseña = dataReader["Contraseña"].ToString();
                                 usuario.Mail = dataReader["Mail"].ToString();
-
-                                usuarios.Add(usuario);
+                                                                
                             }
                         }
                     }
                 }
                 sqlConnection.Close();
             }
-            return usuarios;
-        }
-        public static bool DeleteUser(int id)
-        {
-            bool result = false;
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
-            {
-                string queryDelete = "DELETE FROM Usuario WHERE Id = @id";
-                SqlParameter sqlParameter = new SqlParameter("id", System.Data.SqlDbType.BigInt);
-                sqlParameter.Value = id;
-
-                sqlConnection.Open();
-                using (SqlCommand sqlCommand = new SqlCommand(queryDelete, sqlConnection))
-                {
-                    sqlCommand.Parameters.Add(sqlParameter);
-                    int numberOfRows = sqlCommand.ExecuteNonQuery();
-                    if (numberOfRows > 0)
-                    {
-                        result = true;
-                    }
-                }
-                sqlConnection.Close();
-            }
-            return result;
+            return usuario;
         }
         public static bool CreateNewUser(Usuario usuario)
         {
@@ -121,6 +100,29 @@ namespace MiPrimerApi.Repository
 
                     int numberOfRows = sqlCommand.ExecuteNonQuery();
 
+                    if (numberOfRows > 0)
+                    {
+                        result = true;
+                    }
+                }
+                sqlConnection.Close();
+            }
+            return result;
+        }
+        public static bool DeleteUser(int id)
+        {
+            bool result = false;
+            using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+            {
+                string queryDelete = "DELETE FROM Usuario WHERE Id = @id";
+                SqlParameter sqlParameter = new SqlParameter("id", System.Data.SqlDbType.BigInt);
+                sqlParameter.Value = id;
+
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand(queryDelete, sqlConnection))
+                {
+                    sqlCommand.Parameters.Add(sqlParameter);
+                    int numberOfRows = sqlCommand.ExecuteNonQuery();
                     if (numberOfRows > 0)
                     {
                         result = true;

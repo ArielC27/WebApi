@@ -9,7 +9,13 @@ namespace MiPrimerApi.Controllers
     [Route("[controller]")]
     public class VentaController : ControllerBase
     {
-        [HttpPost]
+        [HttpGet(Name = "GetVentas")]
+        public List<Venta> Ventas ()
+        {
+            return VentaHandler.GetVentas();
+        }
+
+        [HttpPost(Name = "CreateVentas")]
         public bool NuevaVenta([FromBody] PostVenta venta)
         {
             return VentaHandler.CreateNewSale(new Venta
@@ -17,5 +23,11 @@ namespace MiPrimerApi.Controllers
                 Comentarios = venta.Comentarios
             });
         }
+
+        //[HttpDelete(Name = "DeleteVentas")]
+        //public bool Venta EliminarVenta ()
+        //{
+
+        //}
     }
 }

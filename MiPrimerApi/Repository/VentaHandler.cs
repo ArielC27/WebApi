@@ -35,20 +35,21 @@ namespace MiPrimerApi.Repository
             }
             return ventas;
         }
-        public static bool CreateNewSale(Venta venta)
+        public static bool CreateNewSale(/*List<Producto> productos, int idUsuario,*/ Venta venta)
         {
             bool result = false;
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
-                string queryInsert = "INSERT INTO Venta (Comentarios) " +
-                    "VALUES (@comentarios)";
+                string queryVenta = "INSERT INTO Venta (Comentarios) VALUES (@comentarios)";
+                //string queryPV = "SELECT * FROM Producto AS p INNER JOIN ProductoVendido AS pv ON @pv.IdProducto = @p.Id ";
+
                 SqlParameter comentarios = new SqlParameter("Comentarios", System.Data.SqlDbType.VarChar) { Value = venta.Comentarios };
-                
+
                 sqlConnection.Open();
-                using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
+                using (SqlCommand sqlCommand = new SqlCommand(queryVenta, sqlConnection))
                 {
                     sqlCommand.Parameters.Add(comentarios);
-                    
+
                     int numberOfRows = sqlCommand.ExecuteNonQuery();
                     if (numberOfRows > 0)
                     {
@@ -59,5 +60,29 @@ namespace MiPrimerApi.Repository
             }
             return result;
         }
+        //public static bool DeleteSale(int idVenta)
+        //{
+        //    bool result = false;
+        //    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+        //    {
+        //        string queryDelete = "DELETE FROM Venta WHERE Id = @id";
+        //        SqlParameter sqlParameter = new SqlParameter("id", System.Data.SqlDbType.BigInt);
+        //        sqlParameter.Value = idVenta;
+
+        //        sqlConnection.Open();
+        //        using (SqlCommand sqlCommand = new SqlCommand(queryDelete, sqlConnection))
+        //        {
+        //            sqlCommand.Parameters.Add(sqlParameter);
+        //            int numberOfRows = sqlCommand.ExecuteNonQuery();
+        //            if (numberOfRows > 0)
+        //            {
+        //                result = true;
+        //            }
+        //        }
+        //        sqlConnection.Close();
+        //    }
+        //    return result;
+        //}
     }
+
 }
