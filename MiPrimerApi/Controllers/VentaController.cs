@@ -18,10 +18,8 @@ namespace MiPrimerApi.Controllers
         [HttpPost(Name = "CreateVentas")]
         public bool NuevaVenta([FromBody] PostVenta venta)
         {
-            return VentaHandler.CreateNewSale(new Venta
-            {
-                Comentarios = venta.Comentarios
-            });
+            return VentaHandler.CreateNewSale(venta.Productos, venta.Venta);
+         
         }
 
         //[HttpDelete(Name = "DeleteVentas")]

@@ -10,10 +10,10 @@ namespace MiPrimerApi.Repository
         public static Usuario IniciarSesion(string nombreUsuario, string contraseña)
         {
             Usuario usuario = new Usuario();
-            // el ConnectionString se encuientra en DBHandler
+
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
-                var query = @"SELECT * FROM Usuario WHERE NombreUsuario = @NombreUsuario and Contraseña = @Contraseña";
+                var query ="SELECT * FROM Usuario WHERE NombreUsuario = @nombreUsuario AND Contraseña = @contraseña";
                 sqlConnection.Open();
 
                 using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
@@ -38,7 +38,7 @@ namespace MiPrimerApi.Repository
                         else
                         {
                             usuario.Id = 0;
-                            usuario.Nombre = "Este Usuario no existe";
+                            usuario.Nombre = "Usuario o contraseña incorrecta";
                         }
                     }
                 }
