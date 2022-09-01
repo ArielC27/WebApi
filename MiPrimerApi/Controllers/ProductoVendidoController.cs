@@ -9,9 +9,10 @@ namespace MiPrimerApi.Controllers
     public class ProductoVendidoController : ControllerBase
     {
         [HttpGet(Name = "GetProductsSales")]
-        public List<ProductoVendido> GetProductsSales()
+        public List<ProductoVendidoyProducto> GetProductsSales(int IdUsuario)
         {
-            return ProductoVendidoHandler.GetProductsSales();
+            return ProductoVendidoHandler.GetProductoVendido(IdUsuario);
+
         }
     }
 }

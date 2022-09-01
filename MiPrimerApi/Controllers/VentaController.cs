@@ -10,9 +10,9 @@ namespace MiPrimerApi.Controllers
     public class VentaController : ControllerBase
     {
         [HttpGet(Name = "GetVentas")]
-        public List<Venta> Ventas ()
+        public List<Venta> Ventas (int IdUsuario)
         {
-            return VentaHandler.GetVentas();
+            return VentaHandler.GetVentas(IdUsuario);
         }
 
         [HttpPost(Name = "CreateVentas")]
@@ -22,10 +22,10 @@ namespace MiPrimerApi.Controllers
          
         }
 
-        //[HttpDelete(Name = "DeleteVentas")]
-        //public bool Venta EliminarVenta ()
-        //{
-
-        //}
+        [HttpDelete(Name = "DeleteVentas")]
+        public bool EliminarVenta([FromBody] Venta venta)
+        {
+            return VentaHandler.EliminarVenta(venta);
+        }
     }
 }

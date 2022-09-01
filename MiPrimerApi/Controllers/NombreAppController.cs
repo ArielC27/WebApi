@@ -10,7 +10,7 @@ namespace MiPrimerApi.Controllers
         [HttpGet(Name = "NameApp")]
         public string MostrarNombreApp()
         {
-            return "Mi aplicacion Web";
+            return "Aplicacion WEB CoderHouse";
         }
     }
 }

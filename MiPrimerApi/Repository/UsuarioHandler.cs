@@ -17,7 +17,7 @@ namespace MiPrimerApi.Repository
                 {
                     sqlConnection.Open();
 
-                    
+
                     sqlCommand.Parameters.Add(new SqlParameter("NombreUsuario", SqlDbType.VarChar) { Value = nombreUsuario });
                     using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
                     {
@@ -31,7 +31,7 @@ namespace MiPrimerApi.Repository
                                 usuario.NombreUsuario = dataReader["NombreUsuario"].ToString();
                                 usuario.Contraseña = dataReader["Contraseña"].ToString();
                                 usuario.Mail = dataReader["Mail"].ToString();
-                                                                
+
                             }
                         }
                     }
@@ -45,29 +45,37 @@ namespace MiPrimerApi.Repository
             bool result = false;
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
-                string queryInsert = "INSERT INTO Usuario (Nombre, Apellido, NombreUsuario, Contraseña, Mail) " +
-                    "VALUES (@nombre, @apellido, @nombreUsuario, @contraseña, @mail)";
-                SqlParameter nombre = new SqlParameter("Nombre", System.Data.SqlDbType.VarChar) { Value = usuario.Nombre };
-                SqlParameter apellido = new SqlParameter("Apellido", System.Data.SqlDbType.VarChar) { Value = usuario.Apellido };
-                SqlParameter nombreUsuario = new SqlParameter("NombreUsuario", System.Data.SqlDbType.VarChar) { Value = usuario.NombreUsuario };
-                SqlParameter contraseña = new SqlParameter("Contraseña", System.Data.SqlDbType.VarChar) { Value = usuario.Contraseña };
-                SqlParameter mail = new SqlParameter("Mail", System.Data.SqlDbType.VarChar) { Value = usuario.Mail };
-
-                sqlConnection.Open();
-                using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
+                if (GetUser(usuario.Nombre) == null)
                 {
-                    sqlCommand.Parameters.Add(nombre);
-                    sqlCommand.Parameters.Add(apellido);
-                    sqlCommand.Parameters.Add(nombreUsuario);
-                    sqlCommand.Parameters.Add(contraseña);
-                    sqlCommand.Parameters.Add(mail);
+                    string queryInsert = "INSERT INTO Usuario (Nombre, Apellido, NombreUsuario, Contraseña, Mail) " +
+                        "VALUES (@nombre, @apellido, @nombreUsuario, @contraseña, @mail)";
+                    SqlParameter nombre = new SqlParameter("Nombre", System.Data.SqlDbType.VarChar) { Value = usuario.Nombre };
+                    SqlParameter apellido = new SqlParameter("Apellido", System.Data.SqlDbType.VarChar) { Value = usuario.Apellido };
+                    SqlParameter nombreUsuario = new SqlParameter("NombreUsuario", System.Data.SqlDbType.VarChar) { Value = usuario.NombreUsuario };
+                    SqlParameter contraseña = new SqlParameter("Contraseña", System.Data.SqlDbType.VarChar) { Value = usuario.Contraseña };
+                    SqlParameter mail = new SqlParameter("Mail", System.Data.SqlDbType.VarChar) { Value = usuario.Mail };
 
-                    int numberOfRows = sqlCommand.ExecuteNonQuery();
-                    if (numberOfRows > 0)
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand(queryInsert, sqlConnection))
                     {
-                        result = true;
+                        sqlCommand.Parameters.Add(nombre);
+                        sqlCommand.Parameters.Add(apellido);
+                        sqlCommand.Parameters.Add(nombreUsuario);
+                        sqlCommand.Parameters.Add(contraseña);
+                        sqlCommand.Parameters.Add(mail);
+
+                        int numberOfRows = sqlCommand.ExecuteNonQuery();
+                        if (numberOfRows > 0)
+                        {
+                            result = true;
+                        }
                     }
                 }
+                else
+                {
+                    result = false;
+                }
+
                 sqlConnection.Close();
             }
             return result;
