@@ -10,15 +10,16 @@ namespace MiPrimerApi.Repository
         public static Usuario GetUser(string nombreUsuario)
         {
             Usuario usuario = new Usuario();
+
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
                 var queryUsuario = "SELECT * FROM Usuario WHERE NombreUsuario = @nombreUsuario ";
+                var nameUser = new SqlParameter("NombreUsuario", System.Data.SqlDbType.VarChar) { Value = nombreUsuario };
+                sqlConnection.Open();
+
                 using (SqlCommand sqlCommand = new SqlCommand(queryUsuario, sqlConnection))
                 {
-                    sqlConnection.Open();
-
-
-                    sqlCommand.Parameters.Add(new SqlParameter("NombreUsuario", SqlDbType.VarChar) { Value = nombreUsuario });
+                    sqlCommand.Parameters.Add(nameUser);
                     using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
                     {
                         if (dataReader.HasRows)
@@ -34,6 +35,15 @@ namespace MiPrimerApi.Repository
 
                             }
                         }
+                        else
+                        {
+                            usuario.Id = 0;
+                            usuario.Nombre = "";
+                            usuario.Apellido = "";
+                            usuario.NombreUsuario = "";
+                            usuario.Contraseña = "";
+                            usuario.Mail = "";
+                        }
                     }
                 }
                 sqlConnection.Close();
@@ -43,12 +53,14 @@ namespace MiPrimerApi.Repository
         public static bool CreateNewUser(Usuario usuario)
         {
             bool result = false;
+            var  ExisteUsuario = GetUser(usuario.NombreUsuario);
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
-                if (GetUser(usuario.Nombre) == null)
+                if (ExisteUsuario.Id == 0)
                 {
                     string queryInsert = "INSERT INTO Usuario (Nombre, Apellido, NombreUsuario, Contraseña, Mail) " +
                         "VALUES (@nombre, @apellido, @nombreUsuario, @contraseña, @mail)";
+
                     SqlParameter nombre = new SqlParameter("Nombre", System.Data.SqlDbType.VarChar) { Value = usuario.Nombre };
                     SqlParameter apellido = new SqlParameter("Apellido", System.Data.SqlDbType.VarChar) { Value = usuario.Apellido };
                     SqlParameter nombreUsuario = new SqlParameter("NombreUsuario", System.Data.SqlDbType.VarChar) { Value = usuario.NombreUsuario };
@@ -73,9 +85,11 @@ namespace MiPrimerApi.Repository
                 }
                 else
                 {
-                    result = false;
+                    string mensaje = "El usuario ingresado ya existe, vuelve a intentarlo";
+                    Console.WriteLine(mensaje);
+                    return false;
+                    
                 }
-
                 sqlConnection.Close();
             }
             return result;

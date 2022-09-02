@@ -15,12 +15,11 @@ namespace MiPrimerApi.Controllers
             return ProductoHandler.GetProducts();
         }
 
-        [HttpPut(Name = "UpdateProduct")]
-        public bool ModificarProducto([FromBody] Producto producto)
+        [HttpPost(Name = "CreateProduct")]
+        public bool CrearProducto([FromBody] PostProducto producto)
         {
-            return ProductoHandler.UpdateProduct(new Producto
+            return ProductoHandler.CreateProduct(new Producto
             {
-                Id = producto.Id,
                 Descripciones = producto.Descripciones,
                 Costo = producto.Costo,
                 PrecioVenta = producto.PrecioVenta,
@@ -29,11 +28,12 @@ namespace MiPrimerApi.Controllers
             });
         }
 
-        [HttpPost(Name = "CreateProduct")]
-        public bool CrearProducto([FromBody] PostProducto producto)
+        [HttpPut(Name = "UpdateProduct")]
+        public bool ModificarProducto([FromBody] Producto producto)
         {
-            return ProductoHandler.CreateProduct(new Producto
+            return ProductoHandler.UpdateProduct(new Producto
             {
+                Id = producto.Id,
                 Descripciones = producto.Descripciones,
                 Costo = producto.Costo,
                 PrecioVenta = producto.PrecioVenta,

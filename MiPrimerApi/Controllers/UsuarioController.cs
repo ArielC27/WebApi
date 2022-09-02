@@ -10,9 +10,22 @@ namespace MiPrimerApi.Controllers
     public class UsuarioController : ControllerBase
     {
         [HttpGet(Name = "GetUser")]
-        public Usuario GetUsuarios(string nombreUsuario)
+        public Usuario GetUsuarios(string userName)
         {
-            return UsuarioHandler.GetUser(nombreUsuario);
+            return UsuarioHandler.GetUser(userName);
+        }
+
+        [HttpPost(Name = "CreateUser")]
+        public bool CrearNuevoUsuario([FromBody] PostUsuario usuario)
+        {
+            return UsuarioHandler.CreateNewUser(new Usuario
+            {
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido,
+                NombreUsuario = usuario.NombreUsuario,
+                Contraseña = usuario.Contraseña,
+                Mail = usuario.Mail,
+            });
         }
 
         [HttpPut(Name = "UpdateUser")]
@@ -27,19 +40,6 @@ namespace MiPrimerApi.Controllers
                 Contraseña = usuario.Contraseña,
                 Mail = usuario.Mail
 
-            });
-        }
-
-        [HttpPost(Name = "CreateUser")]
-        public bool CrearNuevoUsuario([FromBody] PostUsuario usuario)
-        {
-            return UsuarioHandler.CreateNewUser(new Usuario
-            {
-                Nombre = usuario.Nombre,
-                Apellido = usuario.Apellido,
-                NombreUsuario = usuario.NombreUsuario,
-                Contraseña = usuario.Contraseña,
-                Mail = usuario.Mail,
             });
         }
 
