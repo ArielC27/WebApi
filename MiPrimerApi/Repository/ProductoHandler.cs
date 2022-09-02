@@ -84,8 +84,8 @@ namespace MiPrimerApi.Repository
             {
                 List<string> Querys = new List<string>();
                 //--
-                string queryDelete = "DELETE ProductoVendido FROM Producto AS P INNER JOIN ProductoVendido AS PV on P.ID = PV.IDPRODUCTO WHERE P.ID = @id";
-                Querys.Add(queryDelete);
+                string queryDelete1 = "DELETE ProductoVendido FROM Producto AS P INNER JOIN ProductoVendido AS PV on P.ID = PV.IDPRODUCTO WHERE P.ID = @id";
+                Querys.Add(queryDelete1);
                 //---
                 string queryDelete2 = "DELETE FROM Producto WHERE Id = @id";
                 Querys.Add(queryDelete2);

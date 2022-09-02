@@ -53,7 +53,7 @@ namespace MiPrimerApi.Repository
         public static bool CreateNewUser(Usuario usuario)
         {
             bool result = false;
-            var  ExisteUsuario = GetUser(usuario.NombreUsuario);
+            var ExisteUsuario = GetUser(usuario.NombreUsuario);
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
                 if (ExisteUsuario.Id == 0)
@@ -82,13 +82,6 @@ namespace MiPrimerApi.Repository
                             result = true;
                         }
                     }
-                }
-                else
-                {
-                    string mensaje = "El usuario ingresado ya existe, vuelve a intentarlo";
-                    Console.WriteLine(mensaje);
-                    return false;
-                    
                 }
                 sqlConnection.Close();
             }

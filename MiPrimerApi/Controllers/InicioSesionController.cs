@@ -9,7 +9,7 @@ namespace MiPrimerApi.Controllers
     [Route ("[controller]")]
     public class InicioSesionController: ControllerBase
     {
-        [HttpPost]
+        [HttpPost(Name ="Login")]
         public Usuario Login([FromBody] PostLogin login)
         {
             return InicioSesion.IniciarSesion(login.NombreUsuario, login.Contraseña);

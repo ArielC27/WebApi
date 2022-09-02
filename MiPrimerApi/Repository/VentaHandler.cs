@@ -62,70 +62,73 @@ namespace MiPrimerApi.Repository
                         result = true;
                     }
                 }
-
-                //Selecciono el último Id
-                string query = "SELECT TOP (1) [Id] FROM [Venta] ORDER BY Id Desc";
-                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+                if (result == true)
                 {
 
-                    using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+                    //Selecciono el último Id
+                    string query = "SELECT TOP (1) [Id] FROM [Venta] ORDER BY Id Desc";
+                    using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                     {
-                        if (dataReader.HasRows)
+
+                        using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
                         {
-                            while (dataReader.Read())
+                            if (dataReader.HasRows)
                             {
-                                idVenta = Convert.ToInt32(dataReader["ID"]);
+                                while (dataReader.Read())
+                                {
+                                    idVenta = Convert.ToInt32(dataReader["ID"]);
+                                }
                             }
                         }
                     }
-                }
 
-                foreach (var prod in producto)
-                {
-                    // itero la lista de productos y cargo productos vendidos
-                    string queryInsertProductoVendido = "INSERT INTO ProductoVendido (Stock, IdProducto, IdVenta) " +
-                                                         "VALUES (@Stock, @IdProducto, @IdVenta)";
-                    SqlParameter Stock = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = prod.Stock };
-                    SqlParameter IdProducto = new SqlParameter("IdProducto", System.Data.SqlDbType.Int) { Value = prod.Id };
-                    SqlParameter IdVenta = new SqlParameter("IdVenta", System.Data.SqlDbType.Int) { Value = idVenta };
-
-                    SqlParameter[] ParametrosProductosVendidos = new SqlParameter[] { Stock, IdProducto, IdVenta };
-
-                    using (SqlCommand sqlCommand = new SqlCommand(queryInsertProductoVendido, sqlConnection))
+                    foreach (var prod in producto)
                     {
-                        sqlCommand.Parameters.AddRange(ParametrosProductosVendidos);
-                        int numberOfRows = sqlCommand.ExecuteNonQuery();
-                        if (numberOfRows > 0)
+                        // itero la lista de productos y cargo productos vendidos
+                        string queryInsertProductoVendido = "INSERT INTO ProductoVendido (Stock, IdProducto, IdVenta) " +
+                                                             "VALUES (@Stock, @IdProducto, @IdVenta)";
+                        SqlParameter Stock = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = prod.Stock };
+                        SqlParameter IdProducto = new SqlParameter("IdProducto", System.Data.SqlDbType.Int) { Value = prod.Id };
+                        SqlParameter IdVenta = new SqlParameter("IdVenta", System.Data.SqlDbType.Int) { Value = idVenta };
+
+                        SqlParameter[] ParametrosProductosVendidos = new SqlParameter[] { Stock, IdProducto, IdVenta };
+
+                        using (SqlCommand sqlCommand = new SqlCommand(queryInsertProductoVendido, sqlConnection))
                         {
-                            result = true;
+                            sqlCommand.Parameters.AddRange(ParametrosProductosVendidos);
+                            int numberOfRows = sqlCommand.ExecuteNonQuery();
+                            if (numberOfRows > 0)
+                            {
+                                result = true;
+                            }
                         }
-                    }
 
-                    //Comienza el update de la Tabla Producto
-                    string QueryProductos = "UPDATE PRODUCTO SET Stock = (Stock - @Stock) WHERE ID = @ID";
+                        //Comienza el update de la Tabla Producto
+                        string QueryProductos = "UPDATE PRODUCTO SET Stock = (Stock - @Stock) WHERE ID = @ID";
 
-                    SqlParameter StockaDescontar = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = prod.Stock };
-                    SqlParameter IdProductoCorresponde = new SqlParameter("ID", System.Data.SqlDbType.Int) { Value = prod.Id };
-                    SqlParameter[] ParametersProductoS = new SqlParameter[] { StockaDescontar, IdProductoCorresponde };
+                        SqlParameter StockaDescontar = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = prod.Stock };
+                        SqlParameter IdProductoCorresponde = new SqlParameter("ID", System.Data.SqlDbType.Int) { Value = prod.Id };
+                        SqlParameter[] ParametersProductoS = new SqlParameter[] { StockaDescontar, IdProductoCorresponde };
 
-                    using (SqlCommand sqlCommand = new SqlCommand(QueryProductos, sqlConnection))
-                    {
-                        sqlCommand.Parameters.AddRange(ParametersProductoS);
-                        int numberOfRows = sqlCommand.ExecuteNonQuery();
-                        if (numberOfRows > 0)
+                        using (SqlCommand sqlCommand = new SqlCommand(QueryProductos, sqlConnection))
                         {
-                            result = true;
+                            sqlCommand.Parameters.AddRange(ParametersProductoS);
+                            int numberOfRows = sqlCommand.ExecuteNonQuery();
+                            if (numberOfRows > 0)
+                            {
+                                result = true;
+                            }
                         }
                     }
                 }
                 sqlConnection.Close();
             }
-
             return result;
         }
         public static bool EliminarVenta(Venta venta)
         {
             bool result = false;
+
             //Busco todos los Productos vendidos relacionados con el IdVentas y armo una lista
             using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
             {
@@ -136,7 +139,7 @@ namespace MiPrimerApi.Repository
                 sqlConnection.Open();
                 using (SqlCommand sqlCommand = new SqlCommand(querydeleteProductoVendido, sqlConnection))
                 {
-                    sqlCommand.Parameters.Add(sqlParamenter);   
+                    sqlCommand.Parameters.Add(sqlParamenter);
                     using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
                     {
                         if (dataReader.HasRows)
@@ -154,47 +157,59 @@ namespace MiPrimerApi.Repository
                         }
                     }
                 }
-                //Itero la lista obtenida de Productos vendidos para restablecer el stock de la tabla Producto
-                foreach (var productoVendido in ListaProductosVendidos)
+                if (ListaProductosVendidos.Any())
                 {
-                    //Actualizo tabla Productos
-                    string QueryProductos = "UPDATE PRODUCTO SET Stock = (Stock + @Stock) WHERE ID = @ID";
-                    SqlParameter StockaSumar = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = productoVendido.Stock };
-                    SqlParameter IdProductoCorresponde = new SqlParameter("ID", System.Data.SqlDbType.Int) { Value = productoVendido.IdProducto };
-                    SqlParameter[] ParametrosProductosVendidos = new SqlParameter[] { StockaSumar, IdProductoCorresponde };
 
-                    using (SqlCommand sqlCommand = new SqlCommand(QueryProductos, sqlConnection))
+                    //Itero la lista obtenida de Productos vendidos para restablecer el stock de la tabla Producto
+                    foreach (var productoVendido in ListaProductosVendidos)
                     {
-                        sqlCommand.Parameters.AddRange(ParametrosProductosVendidos);
-                        int numberOfRows = sqlCommand.ExecuteNonQuery();
-                        if (numberOfRows > 0)
+                        //Actualizo tabla Productos
+                        string QueryProductos = "UPDATE PRODUCTO SET Stock = (Stock + @Stock) WHERE ID = @ID";
+                        SqlParameter StockaSumar = new SqlParameter("Stock", System.Data.SqlDbType.Int) { Value = productoVendido.Stock };
+                        SqlParameter IdProductoCorresponde = new SqlParameter("ID", System.Data.SqlDbType.Int) { Value = productoVendido.IdProducto };
+                        SqlParameter[] ParametrosProductosVendidos = new SqlParameter[] { StockaSumar, IdProductoCorresponde };
+
+                        using (SqlCommand sqlCommand = new SqlCommand(QueryProductos, sqlConnection))
                         {
-                            result = true;
+                            sqlCommand.Parameters.AddRange(ParametrosProductosVendidos);
+                            int numberOfRows = sqlCommand.ExecuteNonQuery();
+                            if (numberOfRows > 0)
+                            {
+                                result = true;
+                            }
                         }
                     }
-                }
-                //Elimino Producto Vendido
-                string queryDeletePv = "DELETE FROM ProductoVendido WHERE IdVenta = @idVenta";
-                var sqlParamenterPv = new SqlParameter("idVenta", SqlDbType.BigInt) { Value = venta.Id };
-                using (SqlCommand sqlCommand = new SqlCommand (queryDeletePv, sqlConnection))
-                {
-                    sqlCommand.Parameters.Add(sqlParamenterPv);
-                    int numberOfRows = sqlCommand.ExecuteNonQuery();
-                    if (numberOfRows > 0)
+                    if (result)
                     {
-                        result = true;
+
+                        //Elimino Producto Vendido
+                        string queryDeletePv = "DELETE FROM ProductoVendido WHERE IdVenta = @idVenta";
+                        var sqlParamenterPv = new SqlParameter("idVenta", SqlDbType.BigInt) { Value = venta.Id };
+                        using (SqlCommand sqlCommand = new SqlCommand(queryDeletePv, sqlConnection))
+                        {
+                            sqlCommand.Parameters.Add(sqlParamenterPv);
+                            int numberOfRows = sqlCommand.ExecuteNonQuery();
+                            if (numberOfRows > 0)
+                            {
+                                result = true;
+                            }
+                        }
                     }
-                }
-                //Elimino Venta
-                string queryDeleteVenta = "DELETE FROM Venta WHERE Id = @id";
-                var sqlParamenterV = new SqlParameter("id", SqlDbType.BigInt) { Value = venta.Id };
-                using (SqlCommand sqlCommand = new SqlCommand(queryDeleteVenta, sqlConnection))
-                {
-                    sqlCommand.Parameters.Add(sqlParamenterV);
-                    int numberOfRows = sqlCommand.ExecuteNonQuery();
-                    if (numberOfRows > 0)
+                    if (result)
                     {
-                        result = true;
+
+                        //Elimino Venta
+                        string queryDeleteVenta = "DELETE FROM Venta WHERE Id = @id";
+                        var sqlParamenterV = new SqlParameter("id", SqlDbType.BigInt) { Value = venta.Id };
+                        using (SqlCommand sqlCommand = new SqlCommand(queryDeleteVenta, sqlConnection))
+                        {
+                            sqlCommand.Parameters.Add(sqlParamenterV);
+                            int numberOfRows = sqlCommand.ExecuteNonQuery();
+                            if (numberOfRows > 0)
+                            {
+                                result = true;
+                            }
+                        }
                     }
                 }
                 sqlConnection.Close();

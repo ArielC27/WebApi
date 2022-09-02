@@ -8,7 +8,7 @@ namespace MiPrimerApi.Controllers
     [Route("[controller]")]
     public class ProductoVendidoController : ControllerBase
     {
-        [HttpGet(Name = "GetProductsSales")]
+        [HttpGet(Name = "GetProductosVendidos")]
         public List<ProductoVendidoyProducto> GetProductsSales(int IdUsuario)
         {
             return ProductoVendidoHandler.GetProductoVendido(IdUsuario);
